@@ -1,0 +1,109 @@
+---
+import { u } from '../lib/url';
+import Base from '../layouts/Base.astro';
+import SearchBar from '../components/SearchBar.astro';
+import PropertyCard from '../components/PropertyCard.astro';
+import { getPropiedades, waLink } from '../lib/wp';
+
+const todas = await getPropiedades();
+const destacadas = [...todas].sort((a, b) => Number(b.destacada) - Number(a.destacada) || (b.precioPesos ?? 0) - (a.precioPesos ?? 0)).slice(0, 6);
+// Foto del hero: la propiedad en venta con más fotos (suele ser la mejor producida). Cambia aquí si quieres una fija.
+const heroImg = [...todas].filter((p) => p.operacion === 'venta' && p.imagen?.large).sort((a, b) => b.galeria.length - a.galeria.length)[0]?.imagen?.large || '';
+const enVenta = todas.filter((p) => p.operacion === 'venta').length;
+const enArriendo = todas.filter((p) => p.operacion === 'arriendo').length;
+const comunas = [...new Set(todas.map((p) => p.ciudad).filter(Boolean))];
+
+const servicios = [
+  { t: 'Venta de propiedades', d: 'Tasación referencial, fotografía, publicación en portales y acompañamiento hasta la firma en notaría.', i: 'M3 21h18M5 21V7l7-4 7 4v14M9 21v-6h6v6' },
+  { t: 'Arriendo y administración', d: 'Selección de arrendatarios con informe comercial, contrato y seguimiento mensual de la propiedad.', i: 'M8 7V5a4 4 0 0 1 8 0v2M5 7h14l1 14H4L5 7z' },
+  { t: 'Asesoría legal y financiera', d: 'Revisión de títulos, coordinación con bancos y abogados, y orientación en cada paso del proceso.', i: 'M9 12l2 2 4-4M12 3l8 4v5c0 5-3.5 8.5-8 9-4.5-.5-8-4-8-9V7l8-4z' },
+  { t: 'Terrenos y parcelas', d: 'Conocemos la provincia de Talagante: sitios urbanizados, parcelas de agrado y oportunidades de inversión.', i: 'M3 20l6-14 4 8 3-4 5 10H3z' },
+];
+---
+<Base title="Corredora de Propiedades en Talagante · Casas y Terrenos en Venta y Arriendo | Carolina Robles"
+      description="Corredora de propiedades en Talagante con 18 años de experiencia. Casas, parcelas, terrenos y departamentos en venta y arriendo en Talagante, Peñaflor, Isla de Maipo y Padre Hurtado. Evaluación sin costo.">
+  <!-- HERO -->
+  <section class="relative isolate overflow-hidden bg-carbon-900 text-crema-100">
+    {heroImg && <img src={heroImg} alt="" width="1024" height="768" fetchpriority="high" class="absolute inset-0 -z-20 h-full w-full object-cover" />}
+    <div class="absolute inset-0 -z-10 bg-gradient-to-b from-carbon-900/85 via-carbon-900/60 to-carbon-900/90"></div>
+    <div class="container-site py-24 md:py-32">
+      <p class="eyebrow text-oro-400">Corredora de propiedades · 18 años de experiencia</p>
+      <h1 class="mt-4 max-w-3xl font-serif text-4xl font-semibold leading-tight md:text-6xl">Tu próxima propiedad en la provincia de Talagante</h1>
+      <p class="mt-5 max-w-2xl text-lg text-crema-100/80">Casas, departamentos, terrenos y locales en venta y arriendo en {comunas.slice(0, 4).join(', ')}. Te acompañamos desde la primera visita hasta la entrega de llaves.</p>
+      <div class="mt-10 max-w-5xl">
+        <SearchBar propiedades={todas} />
+      </div>
+      <dl class="mt-10 flex flex-wrap gap-x-10 gap-y-4 text-sm text-crema-100/70">
+        <div><dt class="sr-only">En venta</dt><dd><span class="text-2xl font-bold text-oro-400">{enVenta}</span> en venta</dd></div>
+        <div><dt class="sr-only">En arriendo</dt><dd><span class="text-2xl font-bold text-oro-400">{enArriendo}</span> en arriendo</dd></div>
+        <div><dt class="sr-only">Comunas</dt><dd><span class="text-2xl font-bold text-oro-400">{comunas.length}</span> comunas</dd></div>
+      </dl>
+    </div>
+  </section>
+
+  <!-- DESTACADAS -->
+  <section class="py-16 md:py-20">
+    <div class="container-site">
+      <div class="flex flex-wrap items-end justify-between gap-4">
+        <div>
+          <p class="eyebrow">Propiedades</p>
+          <h2 class="mt-2 text-3xl md:text-4xl">Oportunidades destacadas</h2>
+        </div>
+        <a href={u("/propiedades/")} class="btn-outline">Ver todas ({todas.length})</a>
+      </div>
+      <div class="mt-10 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {destacadas.map((p, i) => <PropertyCard p={p} eager={i < 3} />)}
+      </div>
+    </div>
+  </section>
+
+  <!-- SERVICIOS -->
+  <section class="bg-verde-900 py-16 text-crema-100 md:py-20">
+    <div class="container-site">
+      <p class="eyebrow text-oro-400">Servicios</p>
+      <h2 class="mt-2 max-w-2xl text-3xl md:text-4xl">Todo el proceso, con una sola persona de confianza</h2>
+      <div class="mt-10 grid gap-6 md:grid-cols-2 lg:grid-cols-4">
+        {servicios.map((s) => (
+          <div class="rounded-2xl border border-crema-100/10 bg-white/5 p-6">
+            <svg class="h-8 w-8 text-oro-400" fill="none" stroke="currentColor" stroke-width="1.6" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" d={s.i}/></svg>
+            <h3 class="mt-4 text-lg">{s.t}</h3>
+            <p class="mt-2 text-sm leading-relaxed text-crema-100/70">{s.d}</p>
+          </div>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- NOSOTROS breve -->
+  <section class="py-16 md:py-20">
+    <div class="container-site grid items-center gap-12 lg:grid-cols-2">
+      <div>
+        <p class="eyebrow">Sobre nosotros</p>
+        <h2 class="mt-2 text-3xl md:text-4xl">Carolina Robles Propiedades</h2>
+        <p class="mt-5 leading-relaxed text-carbon-800/80">Somos una corredora con 18 años de experiencia en Talagante y sus alrededores. Nuestro objetivo es entregar los más altos estándares de asesoría durante todo el proceso de arriendo, compra o venta: cuidamos la propiedad, conseguimos un buen arrendatario o comprador y cerramos a la mayor brevedad.</p>
+        <div class="mt-7 flex flex-wrap gap-3">
+          <a href={u("/nosotros/")} class="btn-primary">Conócenos</a>
+          <a href={waLink('Hola Carolina, quiero vender o arrendar mi propiedad')} target="_blank" rel="noopener" class="btn-outline">Quiero vender o arrendar</a>
+        </div>
+      </div>
+      <div class="grid grid-cols-2 gap-4">
+        {todas.slice(0, 4).map((p) => p.imagen && (
+          <a href={u(`/propiedades/${p.slug}/`)} class="aspect-square overflow-hidden rounded-2xl bg-crema-200">
+            <img src={p.imagen.medium} alt={p.titulo} width="400" height="400" loading="lazy" class="h-full w-full object-cover transition hover:scale-105" />
+          </a>
+        ))}
+      </div>
+    </div>
+  </section>
+
+  <!-- CTA -->
+  <section class="bg-oro-500 py-14 text-carbon-900">
+    <div class="container-site flex flex-col items-center justify-between gap-6 text-center md:flex-row md:text-left">
+      <div>
+        <h2 class="text-2xl md:text-3xl">¿Quieres vender o arrendar tu propiedad?</h2>
+        <p class="mt-2 text-carbon-900/75">Te ayudamos a definir el precio correcto y a encontrar al comprador o arrendatario ideal.</p>
+      </div>
+      <a href={u("/contacto/")} class="btn bg-carbon-900 text-crema-100 hover:bg-carbon-800">Solicitar evaluación</a>
+    </div>
+  </section>
+</Base>

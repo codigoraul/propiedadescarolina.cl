@@ -1,0 +1,61 @@
+@import "tailwindcss";
+
+/* Paleta: verde moderno #18804f (botones y fondos), dorado y crema del logotipo */
+@theme {
+  --font-sans: "Plus Jakarta Sans", ui-sans-serif, system-ui, sans-serif;
+  --font-serif: "Cormorant Garamond", Georgia, serif;
+
+  --color-verde-50: #ecf8f1;
+  --color-verde-100: #d3efe0;
+  --color-verde-200: #a6dfc2;
+  --color-verde-500: #1f9a5f;
+  --color-verde-600: #18804f;
+  --color-verde-700: #146a42;
+  --color-verde-800: #0f5033;
+  --color-verde-900: #0a3a25;
+
+  --color-oro-100: #f6edd6;
+  --color-oro-200: #ecdaa8;
+  --color-oro-400: #d4b163;
+  --color-oro-500: #c8a048;
+  --color-oro-600: #a27d28;
+  --color-oro-700: #7d5f1c;
+
+  --color-crema-50: #fbf8f2;
+  --color-crema-100: #f8f0e8;
+  --color-crema-200: #efe4d0;
+  --color-crema-300: #e3d6bf;
+
+  --color-carbon-700: #3a3a36;
+  --color-carbon-800: #24261f;
+  --color-carbon-900: #161810;
+
+  --container-site: 80rem; /* 1280px */
+}
+
+@layer base {
+  html { scroll-behavior: smooth; }
+  body { @apply bg-crema-50 text-carbon-800 font-sans antialiased; }
+  h1, h2, h3 { @apply font-bold tracking-tight; }
+  .prose-wp p { @apply mb-4 leading-relaxed; }
+  .prose-wp ul { @apply list-disc pl-5 mb-4 space-y-1; }
+  .prose-wp strong { @apply font-semibold; }
+}
+
+@utility btn {
+  @apply inline-flex items-center justify-center gap-2 rounded-full px-6 py-3 text-sm font-semibold transition-colors duration-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-oro-500/60;
+}
+@utility container-site { @apply mx-auto w-full max-w-(--container-site) px-4 sm:px-6 lg:px-8; }
+@utility eyebrow { @apply text-xs font-semibold uppercase tracking-[0.2em] text-oro-600; }
+@utility field { @apply w-full rounded-xl border border-carbon-800/15 bg-white px-4 py-3 text-sm text-carbon-800 placeholder:text-carbon-800/40 focus:border-verde-600 focus:outline-none focus:ring-2 focus:ring-verde-600/20; }
+@utility chip { @apply inline-flex items-center rounded-full px-3 py-1 text-xs font-semibold; }
+
+@layer components {
+  .btn-primary { @apply btn bg-verde-600 text-white hover:bg-verde-700; }
+  .btn-gold { @apply btn bg-oro-500 text-carbon-900 hover:bg-oro-400; }
+  .btn-outline { @apply btn border border-carbon-800/20 text-carbon-800 hover:border-verde-600 hover:text-verde-700; }
+  .btn-whatsapp { @apply btn bg-[#25D366] text-white hover:bg-[#1ebe5b]; }
+}
+
+/* Lightbox de la galería */
+.lightbox[hidden] { display: none; }

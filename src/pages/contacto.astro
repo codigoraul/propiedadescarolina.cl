@@ -1,0 +1,80 @@
+---
+import { u } from '../lib/url';
+import Base from '../layouts/Base.astro';
+import { waLink } from '../lib/wp';
+---
+<Base title="Contacto · Corredora de Propiedades en Talagante | Carolina Robles" description="¿Quieres vender o arrendar tu propiedad en Talagante, Peñaflor o Isla de Maipo? Escríbenos por WhatsApp al +56 9 9315 1165 o visítanos en B. O'Higgins 501, piso 2, Talagante. Evaluación gratuita.">
+  <section class="bg-carbon-900 py-14 text-crema-100">
+    <div class="container-site">
+      <p class="eyebrow text-oro-400">Contacto</p>
+      <h1 class="mt-2 text-3xl md:text-4xl">Hablemos de tu próxima propiedad</h1>
+    </div>
+  </section>
+
+  <section class="py-14 md:py-20">
+    <div class="container-site grid gap-12 lg:grid-cols-[1fr_1.2fr]">
+      <div class="space-y-8">
+        <div>
+          <h2 class="text-xl">Oficina</h2>
+          <p class="mt-2 text-carbon-800/75">B. O'Higgins 501, piso 2<br />Talagante, Región Metropolitana</p>
+        </div>
+        <div>
+          <h2 class="text-xl">Teléfonos</h2>
+          <p class="mt-2 space-y-1 text-carbon-800/75">
+            <a class="block hover:text-verde-700" href="tel:+56993151165">+56 9 9315 1165</a>
+            <a class="block hover:text-verde-700" href="tel:+56979771555">+56 9 7977 1555</a>
+          </p>
+        </div>
+        <div>
+          <h2 class="text-xl">Email</h2>
+          <a class="mt-2 block text-carbon-800/75 hover:text-verde-700" href="mailto:contacto@propiedadescarolina.cl">contacto@propiedadescarolina.cl</a>
+        </div>
+        <a href={waLink('Hola Carolina, quiero hacer una consulta')} target="_blank" rel="noopener" class="btn-whatsapp">Escribir por WhatsApp</a>
+        <div class="aspect-[4/3] overflow-hidden rounded-2xl bg-crema-200">
+          <iframe class="h-full w-full" src="https://www.google.com/maps?q=B.%20O'Higgins%20501%2C%20Talagante%2C%20Chile&z=16&output=embed" title="Mapa de la oficina" loading="lazy"></iframe>
+        </div>
+      </div>
+
+      <div class="rounded-2xl bg-white p-6 shadow-lg shadow-black/5 ring-1 ring-carbon-800/5 md:p-8">
+        <h2 class="text-xl">Formulario de contacto</h2>
+        <p class="mt-1 text-sm text-carbon-800/60">Respondemos el mismo día hábil.</p>
+        <p id="form-ok" hidden class="mt-4 rounded-xl bg-verde-50 p-4 text-sm text-verde-800">Gracias, recibimos tu mensaje. Te contactaremos a la brevedad.</p>
+        <p id="form-error" hidden class="mt-4 rounded-xl bg-red-50 p-4 text-sm text-red-800">No pudimos enviar el mensaje. Escríbenos por WhatsApp o al correo.</p>
+        <form id="form-contacto" action={u("/contacto.php")} method="post" class="mt-6 grid gap-4 sm:grid-cols-2">
+          <input type="text" name="_gotcha" class="hidden" tabindex="-1" autocomplete="off" />
+          <label class="block"><span class="mb-1 block text-sm font-medium">Nombre *</span><input class="field" type="text" name="nombre" required /></label>
+          <label class="block"><span class="mb-1 block text-sm font-medium">Teléfono</span><input class="field" type="tel" name="telefono" /></label>
+          <label class="block sm:col-span-2"><span class="mb-1 block text-sm font-medium">Email *</span><input class="field" type="email" name="email" required /></label>
+          <label class="block sm:col-span-2"><span class="mb-1 block text-sm font-medium">¿Qué necesitas?</span>
+            <select class="field" name="motivo">
+              <option>Quiero comprar</option>
+              <option>Quiero arrendar</option>
+              <option>Quiero vender mi propiedad</option>
+              <option>Quiero dar en arriendo mi propiedad</option>
+              <option>Otra consulta</option>
+            </select>
+          </label>
+          <label class="block sm:col-span-2"><span class="mb-1 block text-sm font-medium">Mensaje *</span><textarea class="field" name="mensaje" rows="5" required></textarea></label>
+          <button type="submit" class="btn-primary sm:col-span-2">Enviar mensaje</button>
+        </form>
+      </div>
+    </div>
+  </section>
+</Base>
+
+<script>
+  // Envío sin recargar; el PHP responde JSON. Si falla (p. ej. en local sin PHP) muestra el error.
+  const form = document.getElementById('form-contacto') as HTMLFormElement;
+  const ok = document.getElementById('form-ok')!, err = document.getElementById('form-error')!;
+  form.addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const btn = form.querySelector('button')!; btn.disabled = true; btn.textContent = 'Enviando…';
+    try {
+      const r = await fetch(form.action, { method: 'POST', body: new FormData(form), headers: { Accept: 'application/json' } });
+      const j = await r.json();
+      if (!j.ok) throw new Error(j.error || 'error');
+      ok.hidden = false; err.hidden = true; form.reset();
+    } catch { err.hidden = false; ok.hidden = true; }
+    btn.disabled = false; btn.textContent = 'Enviar mensaje';
+  });
+</script>

@@ -1,0 +1,43 @@
+---
+import { u } from '../lib/url';
+import { precio, ubicacion, TIPO_LABEL, OPERACION_LABEL, type Propiedad } from '../lib/wp';
+interface Props { p: Propiedad; eager?: boolean }
+const { p, eager = false } = Astro.props;
+const $ = precio(p);
+const href = u(`/propiedades/${p.slug}/`);
+---
+<article class="group overflow-hidden rounded-2xl bg-white shadow-sm ring-1 ring-carbon-800/5 transition hover:-translate-y-0.5 hover:shadow-lg">
+  <a href={href} class="relative block aspect-[4/3] overflow-hidden bg-crema-200">
+    {p.imagen ? (
+      <img src={p.imagen.medium} alt={p.imagen.alt || p.titulo} width="768" height="576"
+           loading={eager ? 'eager' : 'lazy'} decoding="async"
+           class="h-full w-full object-cover transition duration-500 group-hover:scale-105" />
+    ) : (
+      <div class="flex h-full items-center justify-center text-carbon-800/30">Sin foto</div>
+    )}
+    <div class="absolute left-3 top-3 flex gap-2">
+      <span class:list={['chip text-white', p.operacion === 'venta' ? 'bg-verde-600' : 'bg-oro-600']}>{OPERACION_LABEL[p.operacion]}</span>
+      {p.destacada && <span class="chip bg-carbon-900/80 text-oro-400">Destacada</span>}
+    </div>
+    <span class="absolute bottom-3 right-3 rounded-full bg-carbon-900/75 px-2.5 py-1 text-xs text-crema-100">{p.galeria.length} fotos</span>
+  </a>
+
+  <div class="p-5">
+    <p class="eyebrow">{TIPO_LABEL[p.tipo]}{p.ciudad ? ` · ${p.ciudad}` : ''}</p>
+    <h3 class="mt-1.5 text-lg leading-snug"><a href={href} class="hover:text-verde-700">{p.titulo}</a></h3>
+    {ubicacion(p) && <p class="mt-1 text-sm text-carbon-800/60">{ubicacion(p)}</p>}
+
+    <div class="mt-4 flex items-end justify-between gap-3">
+      <p class="text-xl font-bold text-verde-700">{$.valor}<span class="text-sm font-medium text-carbon-800/50">{$.sufijo}</span></p>
+    </div>
+
+    {(p.dormitorios || p.banos || p.m2Construidos || p.m2Terreno) && (
+      <ul class="mt-4 flex flex-wrap gap-x-4 gap-y-1 border-t border-carbon-800/10 pt-4 text-sm text-carbon-800/70">
+        {p.dormitorios != null && <li class="flex items-center gap-1.5"><svg class="h-4 w-4 text-oro-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M3 18v-6a2 2 0 0 1 2-2h14a2 2 0 0 1 2 2v6M3 18h18M5 10V7a2 2 0 0 1 2-2h4v5M13 10V5h4a2 2 0 0 1 2 2v3"/></svg>{p.dormitorios} dorm.</li>}
+        {p.banos != null && <li class="flex items-center gap-1.5"><svg class="h-4 w-4 text-oro-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M4 12h16v3a4 4 0 0 1-4 4H8a4 4 0 0 1-4-4v-3zM6 12V6a2 2 0 0 1 4 0M7 19l-1 2M17 19l1 2"/></svg>{p.banos} baños</li>}
+        {p.m2Construidos != null && <li class="flex items-center gap-1.5"><svg class="h-4 w-4 text-oro-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1"/><path d="M4 9h5V4M20 15h-5v5"/></svg>{p.m2Construidos} m²</li>}
+        {p.m2Terreno != null && !p.m2Construidos && <li class="flex items-center gap-1.5"><svg class="h-4 w-4 text-oro-600" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="4" y="4" width="16" height="16" rx="1"/><path d="M4 9h5V4M20 15h-5v5"/></svg>{p.m2Terreno} m² terreno</li>}
+      </ul>
+    )}
+  </div>
+</article>

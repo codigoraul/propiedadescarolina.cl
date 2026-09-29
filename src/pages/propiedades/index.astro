@@ -1,0 +1,112 @@
+---
+import Base from '../../layouts/Base.astro';
+import SearchBar from '../../components/SearchBar.astro';
+import PropertyCard from '../../components/PropertyCard.astro';
+import { getPropiedades } from '../../lib/wp';
+
+const todas = await getPropiedades();
+/** Precio comparable para ordenar (UF ≈ 38.000 CLP solo para ordenar, no se muestra). */
+const orden = (p: (typeof todas)[number]) => p.precioPesos ?? ((p.precioUf ?? p.precioArriendoUf ?? 0) * 38000);
+---
+<Base title="Propiedades en Venta y Arriendo en Talagante, Peñaflor e Isla de Maipo | Carolina Robles" description="Casas en venta, casas en arriendo, parcelas, terrenos, departamentos y locales comerciales en Talagante, Peñaflor, Isla de Maipo y Padre Hurtado. Filtra por comuna, tipo y dormitorios.">
+  <section class="bg-carbon-900 py-14 text-crema-100">
+    <div class="container-site">
+      <h1 class="text-3xl md:text-4xl">Propiedades <span id="sub-op" class="font-normal text-oro-400"></span></h1>
+      <div class="mt-8">
+        <SearchBar propiedades={todas} compact live />
+      </div>
+    </div>
+  </section>
+
+  <section class="py-12 md:py-16">
+    <div class="container-site">
+      <div class="flex flex-wrap items-center justify-between gap-4">
+        <p class="text-sm text-carbon-800/70"><span id="conteo" class="font-semibold text-carbon-800">{todas.length}</span> propiedades</p>
+        <label class="flex items-center gap-2 text-sm text-carbon-800/70">
+          Ordenar
+          <select id="orden" class="field !w-auto !py-2">
+            <option value="recientes">Más recientes</option>
+            <option value="precio-asc">Precio: menor a mayor</option>
+            <option value="precio-desc">Precio: mayor a menor</option>
+          </select>
+        </label>
+      </div>
+
+      <div id="grid" class="mt-8 grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
+        {todas.map((p, i) => (
+          <div class="contents-item" data-operacion={p.operacion} data-tipo={p.tipo} data-ciudad={p.ciudad} data-dorm={p.dormitorios ?? 0} data-precio={orden(p)} data-fecha={p.fecha} data-destacada={p.destacada ? 1 : 0}>
+            <PropertyCard p={p} eager={i < 3} />
+          </div>
+        ))}
+      </div>
+
+      <p id="vacio" hidden class="mt-10 rounded-2xl bg-white p-10 text-center text-carbon-800/70 ring-1 ring-carbon-800/5">
+        No encontramos propiedades con esos filtros. <button type="button" id="limpiar" class="font-semibold text-verde-700 underline">Ver todas</button>
+      </p>
+    </div>
+  </section>
+</Base>
+
+<script>
+  const form = document.getElementById('buscador') as HTMLFormElement;
+  const grid = document.getElementById('grid')!;
+  const items = [...grid.querySelectorAll<HTMLElement>('.contents-item')];
+  const conteo = document.getElementById('conteo')!;
+  const vacio = document.getElementById('vacio')!;
+  const orden = document.getElementById('orden') as HTMLSelectElement;
+
+  // Rellena el formulario desde la URL (?operacion=venta&tipo=casa…)
+  const params = new URLSearchParams(location.search);
+  for (const el of form.elements) {
+    const f = el as HTMLSelectElement;
+    if (f.name && params.has(f.name)) f.value = params.get(f.name) || '';
+  }
+
+  // Los grupos "comercial" incluyen oficinas, locales, industrial y bodegas; "terreno" incluye parcelas
+  const grupos: Record<string, string[]> = {
+    comercial: ['comercial', 'oficina', 'local', 'industrial', 'bodega'],
+    terreno: ['terreno', 'parcela'],
+  };
+
+  function aplicar(push = true) {
+    const d = new FormData(form);
+    const op = String(d.get('operacion') || '');
+    const tipo = String(d.get('tipo') || '');
+    const ciudad = String(d.get('ciudad') || '');
+    const dorm = Number(d.get('dormitorios') || 0);
+    let n = 0;
+    for (const it of items) {
+      const ok = (!op || it.dataset.operacion === op)
+        && (!tipo || it.dataset.tipo === tipo || (grupos[tipo] || []).includes(it.dataset.tipo || ''))
+        && (!ciudad || it.dataset.ciudad === ciudad)
+        && (!dorm || Number(it.dataset.dorm) >= dorm);
+      it.hidden = !ok;
+      if (ok) n++;
+    }
+    conteo.textContent = String(n);
+    vacio.hidden = n > 0;
+
+    const modo = orden.value;
+    const ordenados = [...items].sort((a, b) => {
+      if (modo === 'precio-asc') return Number(a.dataset.precio) - Number(b.dataset.precio);
+      if (modo === 'precio-desc') return Number(b.dataset.precio) - Number(a.dataset.precio);
+      return Number(b.dataset.destacada) - Number(a.dataset.destacada) || (b.dataset.fecha || '').localeCompare(a.dataset.fecha || '');
+    });
+    ordenados.forEach((el) => grid.appendChild(el));
+
+    const subOp = document.getElementById('sub-op');
+    if (subOp) subOp.textContent = op === 'venta' ? 'en venta' : op === 'arriendo' ? 'en arriendo' : '';
+
+    if (push) {
+      const q = new URLSearchParams();
+      if (op) q.set('operacion', op); if (tipo) q.set('tipo', tipo); if (ciudad) q.set('ciudad', ciudad); if (dorm) q.set('dormitorios', String(dorm));
+      history.replaceState(null, '', location.pathname + (q.toString() ? '?' + q : ''));
+    }
+  }
+
+  form.addEventListener('submit', (e) => { e.preventDefault(); aplicar(); });
+  form.addEventListener('change', () => aplicar());
+  orden.addEventListener('change', () => aplicar(false));
+  document.getElementById('limpiar')?.addEventListener('click', () => { form.reset(); aplicar(); });
+  aplicar(false);
+</script>

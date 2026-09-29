@@ -1,0 +1,50 @@
+---
+import { u } from '../lib/url';
+/**
+ * Buscador. En el inicio envía a /propiedades/ por GET; en /propiedades/ filtra en vivo (ver script de esa página).
+ */
+import { TIPO_LABEL, type Propiedad } from '../lib/wp';
+interface Props { propiedades: Propiedad[]; compact?: boolean; live?: boolean }
+const { propiedades, compact = false, live = false } = Astro.props;
+const ciudades = [...new Set(propiedades.map((p) => p.ciudad).filter(Boolean))].sort();
+const tipos = [...new Set(propiedades.map((p) => p.tipo))].sort((a, b) => TIPO_LABEL[a].localeCompare(TIPO_LABEL[b]));
+---
+<form id="buscador" action={u("/propiedades/")} method="get" data-live={live ? 'true' : undefined}
+      class:list={['grid gap-3 rounded-2xl bg-white p-4 shadow-xl shadow-black/10 ring-1 ring-carbon-800/5', compact ? 'sm:grid-cols-2 lg:grid-cols-[1fr_1fr_1fr_1fr_auto]' : 'sm:grid-cols-2 lg:grid-cols-[1.2fr_1fr_1fr_1fr_auto]']}>
+  <label class="block">
+    <span class="sr-only">Operación</span>
+    <select name="operacion" class="field">
+      <option value="">Venta y arriendo</option>
+      <option value="venta">En venta</option>
+      <option value="arriendo">En arriendo</option>
+    </select>
+  </label>
+  <label class="block">
+    <span class="sr-only">Tipo de propiedad</span>
+    <select name="tipo" class="field">
+      <option value="">Todos los tipos</option>
+      {tipos.map((t) => <option value={t}>{TIPO_LABEL[t]}</option>)}
+    </select>
+  </label>
+  <label class="block">
+    <span class="sr-only">Comuna</span>
+    <select name="ciudad" class="field">
+      <option value="">Todas las comunas</option>
+      {ciudades.map((c) => <option value={c}>{c}</option>)}
+    </select>
+  </label>
+  <label class="block">
+    <span class="sr-only">Dormitorios</span>
+    <select name="dormitorios" class="field">
+      <option value="">Dormitorios</option>
+      <option value="1">1+</option>
+      <option value="2">2+</option>
+      <option value="3">3+</option>
+      <option value="4">4+</option>
+    </select>
+  </label>
+  <button type="submit" class="btn-gold">
+    <svg class="h-4 w-4" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><circle cx="11" cy="11" r="7"/><path stroke-linecap="round" d="m20 20-3.5-3.5"/></svg>
+    Buscar
+  </button>
+</form>

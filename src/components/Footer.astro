@@ -1,0 +1,61 @@
+---
+import { u } from '../lib/url';
+const year = new Date().getFullYear();
+---
+<footer class="border-t-4 border-oro-500 bg-carbon-900 text-crema-100">
+  <div class="container-site grid gap-12 pt-14 pb-10 md:grid-cols-2 lg:grid-cols-4">
+    <div class="lg:col-span-2">
+      <img src={u("/img/logo-horizontal.png")} alt="Carolina Robles Propiedades" width="845" height="165" class="h-20 w-auto" />
+      <p class="mt-5 max-w-md font-serif text-lg italic text-crema-100/80">Asesoría cercana y transparente para comprar, vender o arrendar tu propiedad en la provincia de Talagante.</p>
+      <div class="mt-6 flex gap-3">
+        <a href="https://www.instagram.com/" target="_blank" rel="noopener" aria-label="Instagram" class="rounded-full border border-crema-100/15 p-2.5 text-crema-100/80 transition hover:border-oro-500 hover:text-oro-400">
+          <svg class="h-5 w-5" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="3" width="18" height="18" rx="5"/><circle cx="12" cy="12" r="4"/><circle cx="17.5" cy="6.5" r="1" fill="currentColor"/></svg>
+        </a>
+        <a href="https://www.facebook.com/" target="_blank" rel="noopener" aria-label="Facebook" class="rounded-full border border-crema-100/15 p-2.5 text-crema-100/80 transition hover:border-oro-500 hover:text-oro-400">
+          <svg class="h-5 w-5" fill="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path d="M13.5 22v-8h2.7l.4-3.2h-3.1V8.8c0-.9.3-1.6 1.6-1.6h1.7V4.4c-.3 0-1.3-.1-2.5-.1-2.5 0-4.1 1.5-4.1 4.2v2.3H7.4V14h2.8v8h3.3z"/></svg>
+        </a>
+      </div>
+    </div>
+
+    <div>
+      <h3 class="mb-5 text-sm font-semibold uppercase tracking-wider text-white/80">Propiedades</h3>
+      <ul class="space-y-3 text-sm text-crema-100/75">
+        <li><a class="hover:text-oro-400" href={u("/propiedades/?operacion=venta")}>En venta</a></li>
+        <li><a class="hover:text-oro-400" href={u("/propiedades/?operacion=arriendo")}>En arriendo</a></li>
+        <li><a class="hover:text-oro-400" href={u("/propiedades/?tipo=casa")}>Casas</a></li>
+        <li><a class="hover:text-oro-400" href={u("/propiedades/?tipo=departamento")}>Departamentos</a></li>
+        <li><a class="hover:text-oro-400" href={u("/propiedades/?tipo=terreno")}>Terrenos y parcelas</a></li>
+        <li><a class="hover:text-oro-400" href={u("/propiedades/?tipo=comercial")}>Comercial y oficinas</a></li>
+      </ul>
+    </div>
+
+    <div>
+      <h3 class="mb-5 text-sm font-semibold uppercase tracking-wider text-white/80">Contacto</h3>
+      <ul class="space-y-3 text-sm text-crema-100/75">
+        <li class="flex items-start gap-3">
+          <svg class="mt-0.5 h-4 w-4 shrink-0 text-oro-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11a7 7 0 0 0-14 0c0 4.8 7 11 7 11z"/><circle cx="12" cy="10" r="2.5"/></svg>
+          <span>B. O'Higgins 501, piso 2<br />Talagante, Región Metropolitana</span>
+        </li>
+        <li class="flex items-center gap-3">
+          <svg class="h-4 w-4 shrink-0 text-oro-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+          <a class="hover:text-oro-400" href="tel:+56993151165">+56 9 9315 1165</a>
+        </li>
+        <li class="flex items-center gap-3">
+          <svg class="h-4 w-4 shrink-0 text-oro-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+          <a class="hover:text-oro-400" href="tel:+56979771555">+56 9 7977 1555</a>
+        </li>
+        <li class="flex items-center gap-3">
+          <svg class="h-4 w-4 shrink-0 text-oro-500" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          <a class="hover:text-oro-400" href="mailto:contacto@propiedadescarolina.cl">contacto@propiedadescarolina.cl</a>
+        </li>
+      </ul>
+    </div>
+  </div>
+
+  <div class="border-t border-crema-100/10">
+    <div class="container-site flex flex-col items-center justify-between gap-3 py-6 text-xs text-crema-100/55 sm:flex-row">
+      <p>© {year} Carolina Robles Propiedades. Todos los derechos reservados.</p>
+      <p>Diseño web: <a href="https://diseñopaginas.cl" target="_blank" rel="noopener" class="hover:text-oro-400">DiseñoPaginas.cl</a></p>
+    </div>
+  </div>
+</footer>
