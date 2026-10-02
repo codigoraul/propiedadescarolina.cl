@@ -1,4 +1,5 @@
 ---
+import { u } from '../../lib/url';
 import Base from '../../layouts/Base.astro';
 import SearchBar from '../../components/SearchBar.astro';
 import PropertyCard from '../../components/PropertyCard.astro';
@@ -9,7 +10,7 @@ const todas = await getPropiedades();
 const orden = (p: (typeof todas)[number]) => p.precioPesos ?? ((p.precioUf ?? p.precioArriendoUf ?? 0) * 38000);
 ---
 <Base title="Propiedades en Venta y Arriendo en Talagante, Peñaflor e Isla de Maipo | Carolina Robles" description="Casas en venta, casas en arriendo, parcelas, terrenos, departamentos y locales comerciales en Talagante, Peñaflor, Isla de Maipo y Padre Hurtado. Filtra por comuna, tipo y dormitorios.">
-  <section class="bg-carbon-900 py-14 text-crema-100">
+  <section class="hero-foto py-14 text-crema-100" style={`--hero-img:url(${u("/img/hero-propiedades.webp")})`}>
     <div class="container-site">
       <h1 class="text-3xl md:text-4xl">Propiedades <span id="sub-op" class="font-normal text-oro-400"></span></h1>
       <div class="mt-8">

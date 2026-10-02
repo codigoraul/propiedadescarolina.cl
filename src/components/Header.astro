@@ -12,37 +12,85 @@ const links = [
 ];
 const activo = (href: string) => (href === '/' ? path === '/' : path.startsWith(href.split('?')[0]) && !href.includes('?'));
 ---
-<header class="sticky top-0 z-40 bg-[rgba(28,28,28,0.85)] text-crema-100 backdrop-blur">
+<div class="topbar bg-carbon-900 text-sm text-crema-100/80">
+  <div class="container-site flex min-h-10 items-center justify-between gap-4 py-2">
+    <p class="hidden items-center gap-2 md:flex">
+      <svg class="h-4 w-4 shrink-0 text-oro-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M12 21s7-6.2 7-11.5A7 7 0 0 0 5 9.5C5 14.8 12 21 12 21z"/><circle cx="12" cy="9.5" r="2.5"/></svg>
+      B. O'Higgins 501, piso 2, Talagante
+    </p>
+    <div class="flex w-full flex-wrap items-center justify-center gap-x-6 gap-y-1 md:w-auto md:justify-end">
+      <a href="tel:+56993151165" class="flex items-center gap-2 transition-colors hover:text-oro-400">
+        <svg class="h-4 w-4 text-oro-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+        +56 9 9315 1165
+      </a>
+      <a href="tel:+56979771555" class="hidden items-center gap-2 transition-colors hover:text-oro-400 sm:flex">
+        <svg class="h-4 w-4 text-oro-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><path d="M5 4h4l2 5-2.5 1.5a11 11 0 0 0 5 5L15 13l5 2v4a2 2 0 0 1-2 2A16 16 0 0 1 3 6a2 2 0 0 1 2-2z"/></svg>
+        +56 9 7977 1555
+      </a>
+      <a href="mailto:contacto@propiedadescarolina.cl" class="hidden items-center gap-2 transition-colors hover:text-oro-400 sm:flex">
+        <svg class="h-4 w-4 text-oro-400" fill="none" stroke="currentColor" stroke-width="1.8" viewBox="0 0 24 24" aria-hidden="true"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+        contacto@propiedadescarolina.cl
+      </a>
+    </div>
+  </div>
+</div>
+
+<header id="site-header" class="site-header sticky top-0 z-40 backdrop-blur">
   <div class="container-site flex h-20 items-center justify-between gap-6">
     <a href={u("/")} class="flex shrink-0 items-center" aria-label="Carolina Robles Propiedades — Inicio">
-      <img src={u("/img/logo-horizontal.png")} alt="Carolina Robles Propiedades" width="845" height="165" class="h-12 w-auto md:h-14" />
+      <img src={u("/img/logo-horizontal-claro.png")} alt="Carolina Robles Propiedades" width="845" height="165" class="logo-claro h-12 w-auto md:h-14" />
+      <img src={u("/img/logo-horizontal.png")} alt="" aria-hidden="true" width="845" height="165" class="logo-oscuro h-12 w-auto md:h-14" />
     </a>
 
-    <nav class="hidden items-center gap-7 text-sm font-medium lg:flex" aria-label="Principal">
+    <nav class="hidden items-center gap-7 text-base font-medium lg:flex" aria-label="Principal">
       {links.map((l) => (
-        <a href={u(l.href)} class:list={['transition-colors hover:text-oro-400', activo(l.href) ? 'text-oro-400' : 'text-crema-100/85']}>{l.label}</a>
+        <a href={u(l.href)} class:list={['nav-link transition-colors', activo(l.href) && 'is-active']}>{l.label}</a>
       ))}
     </nav>
 
-    <div class="hidden items-center gap-3 lg:flex">
-      <a href={waLink('Hola Carolina, quiero información sobre propiedades')} target="_blank" rel="noopener" class="btn-primary !py-2.5">
-        <svg class="h-4 w-4" viewBox="0 0 24 24" fill="currentColor" aria-hidden="true"><path d="M20.5 3.5A11.8 11.8 0 0 0 12.05 0C5.5 0 .2 5.3.2 11.85c0 2.1.55 4.13 1.6 5.93L0 24l6.4-1.68a11.8 11.8 0 0 0 5.65 1.44c6.55 0 11.85-5.3 11.85-11.85 0-3.17-1.23-6.15-3.4-8.4zm-8.45 18.2c-1.77 0-3.5-.48-5.02-1.38l-.36-.21-3.8 1 1.02-3.7-.24-.38a9.84 9.84 0 0 1-1.5-5.2c0-5.43 4.42-9.85 9.86-9.85 2.63 0 5.1 1.03 6.96 2.9a9.8 9.8 0 0 1 2.88 6.96c0 5.44-4.42 9.86-9.8 9.86zm5.4-7.37c-.3-.15-1.76-.87-2.03-.97-.27-.1-.47-.15-.67.15-.2.3-.77.97-.94 1.17-.17.2-.35.22-.64.07-.3-.15-1.25-.46-2.38-1.47-.88-.78-1.47-1.75-1.64-2.05-.17-.3-.02-.46.13-.6.13-.14.3-.35.44-.52.15-.17.2-.3.3-.5.1-.2.05-.37-.03-.52-.07-.15-.66-1.6-.9-2.2-.24-.58-.49-.5-.67-.5h-.57c-.2 0-.52.07-.8.37-.27.3-1.04 1.02-1.04 2.48s1.07 2.88 1.22 3.08c.15.2 2.1 3.2 5.08 4.49.71.3 1.26.49 1.7.63.71.23 1.36.2 1.87.12.57-.08 1.76-.72 2-1.41.25-.7.25-1.29.18-1.41-.08-.13-.28-.2-.57-.35z"/></svg>
-        WhatsApp
-      </a>
-    </div>
 
-    <button id="nav-toggle" class="rounded-lg p-2 text-crema-100 lg:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-mobile">
-      <svg class="h-6 w-6" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
+    <button id="nav-toggle" class="rounded-lg p-2 lg:hidden" aria-label="Abrir menú" aria-expanded="false" aria-controls="nav-mobile">
+      <svg class="h-8 w-8" fill="none" stroke="currentColor" stroke-width="2" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" d="M4 7h16M4 12h16M4 17h16"/></svg>
     </button>
   </div>
 
-  <div id="nav-mobile" hidden class="border-t border-crema-100/10 bg-[#1c1c1c] lg:hidden">
+  <div id="nav-mobile" hidden class="nav-mobile lg:hidden">
     <nav class="container-site flex flex-col py-5 text-lg font-medium" aria-label="Móvil">
-      {links.map((l) => <a href={u(l.href)} class="border-b border-crema-100/10 py-4 text-crema-100/90 hover:text-oro-400">{l.label}</a>)}
+      {links.map((l) => <a href={u(l.href)} class="nav-link nav-link-m py-4">{l.label}</a>)}
       <a href={waLink('Hola Carolina, quiero información sobre propiedades')} target="_blank" rel="noopener" class="btn-primary mt-6 mb-3 !py-4 text-base">Escríbenos por WhatsApp</a>
     </nav>
   </div>
 </header>
+
+<script is:inline>
+  // Prueba de color: ?header=oscuro (se recuerda durante la sesión). Por defecto: claro.
+  (function () {
+    try {
+      var q = new URLSearchParams(location.search).get('header');
+      if (q) sessionStorage.setItem('header', q);
+      var t = sessionStorage.getItem('header');
+      if (t === 'oscuro') document.getElementById('site-header').dataset.tema = 'oscuro';
+      if (t === 'claro') sessionStorage.removeItem('header');
+    } catch (e) {}
+  })();
+</script>
+
+<style is:global>
+  .site-header { background: rgba(255,255,255,.94); color: var(--color-carbon-900); box-shadow: 0 1px 0 rgba(22,24,16,.08); }
+  .site-header .logo-oscuro { display: none; }
+  .site-header .nav-link { color: rgba(22,24,16,.8); }
+  .site-header .nav-link:hover, .site-header .nav-link.is-active { color: #7a5a2c; } /* café del tronco del logo */
+  .site-header .nav-mobile { background: #fff; border-top: 1px solid rgba(22,24,16,.08); }
+  .site-header .nav-link-m { display: block; border-bottom: 1px solid rgba(22,24,16,.08); }
+
+  .site-header[data-tema="oscuro"] { background: rgba(22,24,16,.94); color: var(--color-crema-100); box-shadow: none; }
+  .site-header[data-tema="oscuro"] .logo-claro { display: none; }
+  .site-header[data-tema="oscuro"] .logo-oscuro { display: block; }
+  .site-header[data-tema="oscuro"] .nav-link { color: rgba(248,240,232,.85); }
+  .site-header[data-tema="oscuro"] .nav-link:hover, .site-header[data-tema="oscuro"] .nav-link.is-active { color: var(--color-oro-400); }
+  .site-header[data-tema="oscuro"] .nav-mobile { background: var(--color-carbon-900); border-top-color: rgba(248,240,232,.1); }
+  .site-header[data-tema="oscuro"] .nav-link-m { border-bottom-color: rgba(248,240,232,.1); }
+</style>
 
 <script>
   const btn = document.getElementById('nav-toggle');
