@@ -2,7 +2,7 @@
 /**
  * Plugin Name: Carolina – Deploy automático (WordPress → GitHub)
  * Description: Cuando se crea, edita, publica, despublica o borra una propiedad, dispara el workflow de GitHub Actions que reconstruye y publica el sitio Astro. El token se configura en Ajustes → Deploy automático.
- * Version: 2.0
+ * Version: 2.1
  */
 if (!defined('ABSPATH')) exit;
 
@@ -55,6 +55,12 @@ add_action('carolina_run_deploy', 'carolina_send_dispatch');
 add_action('acf/save_post', function ($post_id) {
     if (get_post_type($post_id) === CAROLINA_CPT) carolina_schedule_deploy();
 }, 30);
+
+// Cualquier guardado de una propiedad (incluye Edición rápida y edición en lote)
+add_action('save_post_' . CAROLINA_CPT, function ($post_id, $post) {
+    if (wp_is_post_revision($post_id) || wp_is_post_autosave($post_id)) return;
+    if ($post->post_status === 'publish') carolina_schedule_deploy();
+}, 20, 2);
 
 add_action('transition_post_status', function ($new, $old, $post) {
     if ($post->post_type !== CAROLINA_CPT || $new === $old) return;
